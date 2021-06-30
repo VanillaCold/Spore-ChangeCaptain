@@ -56,58 +56,17 @@ void EditCaptain::OnShopperAccept(const ResourceKey& selection)
 {
 	if (selection != ResourceKey(0, 0, 0))
 	{
-		 //old code:
-		cCreatureAnimalPtr creature;
+		cCreatureAnimalPtr creature; //create new pointer
 		auto oldav = GameNounManager.GetAvatar();
-		creature = Simulator::cCreatureAnimal::Create(GameNounManager.GetAvatar()->GetPosition(), SpeciesManager.GetSpeciesProfile(selection), 1, nullptr, 0, 0);
-		//GameNounManager.SetAvatar(creature.get());
-		//GameNounManager.DestroyInstance(oldav);
-		//GameNounManager.DestroyInstance(object_cast<Simulator::cGameData>(oldav));
+		creature = Simulator::cCreatureAnimal::Create(GameNounManager.GetAvatar()->GetPosition(), SpeciesManager.GetSpeciesProfile(selection), 1, nullptr, 0, 0); //create new creature for said pointer
 
-		//auto av = GameNounManager.GetAvatar();
-		//av->mSpeciesKey = selection;
-		//av->mNextSpecies = selection;
-		//av->field_B20 = SpeciesManager.GetSpeciesProfile(selection);
-		// = new Anim::AnimatedCreature();
-		//creature = av->mpAnimatedCreature->mpAnimWorld->LoadCreature(selection);
-		//auto& oldcreature = av->mpAnimatedCreature;
-		 //creature->mnRefCount = oldcreature->mnRefCount;
-		 //creature->field_154 = oldcreature->field_154;
-		 //creature->field_158 = oldcreature->field_158;
-		//creature->field_15C = oldcreature->field_15C;
-		 //creature->field_160 = oldcreature->field_160;
-		 //creature->field_164 = oldcreature->field_164;
-		//creature->field_170 = oldcreature->field_170;
-		//creature->field_184 = oldcreature->field_184;
-		 //creature->field_188 = oldcreature->field_188;
-		//creature->func
-		//creature->field_18C = oldcreature->field_18C;
-		//creature->field_194 = oldcreature->field_194;
-		//creature->p_cid-> = oldcreature->p_cid;
-		//	av->mpAnimatedCreature;
-		
-		//av->mpAnimatedCreature->p_cid = creature->p_cid;
-		//av->mpAnimatedCreature->mpModel = creature->mpModel;
-		//av->mpAnimatedCreature->
-		//av->mpAnimatedCreature->p_cid->field_2C0 = creature->p_cid->field_2C0;
-		//av->mpAnimatedCreature->p_cid->pCreature = creature->p_cid->pCreature;
-		//av->mpAnimatedCreature->p_cid->blocks = creature->p_cid->blocks;
-		//av->mpAnimatedCreature = creature;'
-
-		oldav->SetModelKey(selection);
-		auto scale = oldav->GetScale();
-		//oldav->mpAnimatedCreature->mpModel = creature->mpAnimatedCreature->mpModel;
-		//oldav->GetModelWorld()->DestroyModel(oldav->GetModel(),0);
-		oldav->SetModel(creature->GetModel(),oldav->GetModelWorld());
-		oldav->mpAnimatedCreature.swap(creature->mpAnimatedCreature);
-		oldav->SetHasModelChanged(true);
-		oldav->SetScale(scale);
-		//GameNounManager.DestroyInstance(creature.get());
-		creature->SetPosition(Vector3(0, 0, 0));
-
-		//delete creature.get();
-		//av->SetModel(av->GetModelWorld()->LoadModel(selection.instanceID, selection.groupID),av->GetModelWorld());
-		//av->SetHasModelChanged(true);
+		oldav->SetModelKey(selection); //change the resourcekey for the model
+		auto scale = oldav->GetScale(); //get the current avatar scale
+		oldav->SetModel(creature->GetModel(),oldav->GetModelWorld()); //change avatar model
+		oldav->mpAnimatedCreature.swap(creature->mpAnimatedCreature); //swap avatar mpAnimatedCreature with that of placeholder creature
+		oldav->SetHasModelChanged(true); //tell the avatar that its model has changed
+		oldav->SetScale(scale); //restore the avatar scale
+		creature->SetPosition(Vector3(0, 0, 0)); //removing placeholder creature crashes, so put it into the void instead.
 	}
 }
 
